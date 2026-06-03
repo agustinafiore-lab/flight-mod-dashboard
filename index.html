@@ -89,10 +89,11 @@
   .step-pill.ticket { background: #EAD1DC; color: #4A235A; }
 
   /* EDITABLE CELLS */
-  td[contenteditable="true"] { outline: none; cursor: text; }
-  td[contenteditable="true"]:focus { background: #FFFDE7 !important; outline: 2px solid #4FC3F7; border-radius: 3px; }
   .edit-mode-banner { display: none; background: #E3F2FD; color: #1565C0; padding: 8px 40px; font-size: 12px; font-weight: 600; border-bottom: 1px solid #BBDEFB; }
   .edit-mode-banner.visible { display: block; }
+  body.is-editing #priorityTable td, body.is-editing #detailTable td { cursor: pointer; outline: 1px dashed #90CAF9; }
+  body.is-editing #priorityTable td:hover, body.is-editing #detailTable td:hover { background: #E3F2FD !important; }
+  .cell-editor { width: 100%; min-height: 50px; border: 2px solid #4FC3F7; border-radius: 4px; padding: 6px; font-size: 12px; font-family: inherit; background: #FFFDE7; resize: vertical; box-sizing: border-box; }
 
   /* ERROR DETAIL */
   .detail-filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -395,9 +396,9 @@
 
   // ── EDIT MODE ──
   let editMode = false;
-  const STORAGE_KEY = 'flightModDashboard_v1';
+  const STORAGE_KEY = 'flightModDashboard_v2';
 
-  function getEditableCells() {
+  function getAllCells() {
     return document.querySelectorAll('#priorityTable td, #detailTable td');
   }
 
@@ -408,20 +409,43 @@
     btn.textContent = editMode ? '💾 Done Editing' : '✏️ Edit Mode';
     btn.classList.toggle('editing', editMode);
     banner.classList.toggle('visible', editMode);
-    getEditableCells().forEach((td, i) => {
-      if (editMode) {
-        td.setAttribute('contenteditable', 'true');
-        td.dataset.idx = i;
-      } else {
-        td.removeAttribute('contenteditable');
-        saveEdits();
-      }
-    });
+    document.body.classList.toggle('is-editing', editMode);
+    if (!editMode) saveEdits();
   }
+
+  // Click a cell → open textarea editor
+  document.addEventListener('click', function(e) {
+    if (!editMode) return;
+    const td = e.target.closest('#priorityTable td, #detailTable td');
+    if (!td || td.querySelector('.cell-editor')) return;
+
+    const original = td.innerHTML;
+    const text = td.innerText.trim();
+
+    const ta = document.createElement('textarea');
+    ta.className = 'cell-editor';
+    ta.value = text;
+    td.innerHTML = '';
+    td.appendChild(ta);
+    ta.focus();
+    ta.select();
+
+    function commit() {
+      const newVal = ta.value.trim();
+      td.innerHTML = newVal !== '' ? newVal : original;
+      saveEdits();
+    }
+
+    ta.addEventListener('blur', commit);
+    ta.addEventListener('keydown', function(ev) {
+      if (ev.key === 'Escape') { td.innerHTML = original; ev.preventDefault(); }
+      if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); ta.blur(); }
+    });
+  });
 
   function saveEdits() {
     const data = {};
-    getEditableCells().forEach((td, i) => { data[i] = td.innerHTML; });
+    getAllCells().forEach((td, i) => { data[i] = td.innerHTML; });
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
   }
 
@@ -430,20 +454,10 @@
       const saved = localStorage.getItem(STORAGE_KEY);
       if (!saved) return;
       const data = JSON.parse(saved);
-      getEditableCells().forEach((td, i) => {
-        if (data[i] !== undefined) td.innerHTML = data[i];
-      });
+      getAllCells().forEach((td, i) => { if (data[i] !== undefined) td.innerHTML = data[i]; });
     } catch(e) {}
   }
 
-  // Auto-save on each keystroke while in edit mode
-  document.addEventListener('input', function(e) {
-    if (editMode && (e.target.closest('#priorityTable') || e.target.closest('#detailTable'))) {
-      saveEdits();
-    }
-  });
-
-  // Load saved edits on page open
   window.addEventListener('DOMContentLoaded', loadEdits);
 </script>
 </body>
