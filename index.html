@@ -9,9 +9,14 @@
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #1a1a2e; }
 
   /* HEADER */
-  .header { background: linear-gradient(135deg, #1F3864 0%, #2E75B6 100%); color: white; padding: 28px 40px; }
-  .header h1 { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
-  .header p { font-size: 13px; opacity: 0.8; margin-top: 6px; }
+  .header { background: linear-gradient(135deg, #1F3864 0%, #2E75B6 100%); color: white; padding: 28px 40px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .header-text h1 { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+  .header-text p { font-size: 13px; opacity: 0.8; margin-top: 6px; }
+
+  /* EDIT MODE BUTTON */
+  #editToggle { padding: 8px 18px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.6); background: transparent; color: white; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  #editToggle:hover { background: rgba(255,255,255,0.15); border-color: white; }
+  #editToggle.editing { background: #4FC3F7; border-color: #4FC3F7; color: #1F3864; }
 
   /* NAV TABS */
   .tabs { background: #1F3864; display: flex; gap: 0; padding: 0 40px; }
@@ -67,16 +72,6 @@
   /* TREND */
   .trend { font-size: 18px; }
 
-  /* TOP 3 URGENT */
-  .urgent-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
-  .urgent-card { background: white; border-radius: 10px; padding: 18px 22px; border-left: 6px solid #E53935; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
-  .urgent-card .rank { font-size: 11px; font-weight: 700; color: #E53935; text-transform: uppercase; letter-spacing: 0.5px; }
-  .urgent-card .title { font-size: 15px; font-weight: 700; color: #1F3864; margin: 4px 0 8px; }
-  .urgent-card .meta { display: flex; flex-wrap: wrap; gap: 12px; }
-  .urgent-card .meta-item { font-size: 12px; color: #555; }
-  .urgent-card .meta-item strong { color: #1a1a2e; }
-  .urgent-card .error-pill { display: inline-block; background: #FFF3E0; color: #E65100; border: 1px solid #FFCC80; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-family: monospace; margin: 6px 0; }
-
   /* PRIORITY ACTIONS TABLE */
   .priority-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); font-size: 12px; }
   .priority-table thead tr { background: #1F3864; color: white; }
@@ -92,6 +87,12 @@
   .step-pill.eligibility { background: #DEEAF1; color: #1F3864; }
   .step-pill.bookrebook { background: #FCE4D6; color: #843C0C; }
   .step-pill.ticket { background: #EAD1DC; color: #4A235A; }
+
+  /* EDITABLE CELLS */
+  td[contenteditable="true"] { outline: none; cursor: text; }
+  td[contenteditable="true"]:focus { background: #FFFDE7 !important; outline: 2px solid #4FC3F7; border-radius: 3px; }
+  .edit-mode-banner { display: none; background: #E3F2FD; color: #1565C0; padding: 8px 40px; font-size: 12px; font-weight: 600; border-bottom: 1px solid #BBDEFB; }
+  .edit-mode-banner.visible { display: block; }
 
   /* ERROR DETAIL */
   .detail-filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -123,9 +124,14 @@
 <body>
 
 <div class="header">
-  <h1>✈️ Flight Modification Automation — Executive Dashboard</h1>
-  <p>Q2 2025 vs Q2 2026 &nbsp;·&nbsp; 8 Airlines &nbsp;·&nbsp; Data: May 2026 &nbsp;·&nbsp; ProdOps Review</p>
+  <div class="header-text">
+    <h1>✈️ Flight Modification Automation — Executive Dashboard</h1>
+    <p>Q2 2025 vs Q2 2026 &nbsp;·&nbsp; 8 Airlines &nbsp;·&nbsp; Data: May 2026 &nbsp;·&nbsp; ProdOps Review</p>
+  </div>
+  <button id="editToggle" onclick="toggleEditMode()">✏️ Edit Mode</button>
 </div>
+
+<div class="edit-mode-banner" id="editBanner">✏️ Edit mode ON — click any cell in the tables to edit. Changes are saved automatically.</div>
 
 <div class="tabs">
   <div class="tab active" onclick="showTab('overview')">📊 Overview</div>
@@ -264,49 +270,11 @@
     </tbody>
   </table>
 
-  <div class="section-title">🚨 Top 3 Actions This Week</div>
-  <div class="urgent-cards">
-    <div class="urgent-card">
-      <div class="rank">#1 — WN / Ticket Step</div>
-      <div class="title">Open Jira: PNR Concurrency Conflicts</div>
-      <div class="error-pill">Pnr updated by parallel process</div>
-      <div class="error-pill">FINISH OR IGNORE</div>
-      <div class="error-pill">SIMULTANEOUS CHANGES TO PNR</div>
-      <div class="meta" style="margin-top:8px">
-        <div class="meta-item">📊 <strong>11 NEW cases</strong> May 2026 (0 in all prior months)</div>
-        <div class="meta-item">🔧 <strong>Fix:</strong> Add PNR concurrency lock or retry-with-backoff</div>
-        <div class="meta-item">🧩 <strong>Cause:</strong> WN NDC migration — parallel processes writing to same PNR</div>
-        <div class="meta-item">👤 <strong>Owner:</strong> Eng / WN Integration</div>
-      </div>
-    </div>
-    <div class="urgent-card">
-      <div class="rank">#2 — LH / Ticket Step</div>
-      <div class="title">Open Jira: ETKT Revalidation Denied</div>
-      <div class="error-pill">LH ETKT: REVALIDATION REQUEST DENIED</div>
-      <div class="meta" style="margin-top:8px">
-        <div class="meta-item">📊 <strong>10 NEW cases</strong> May 2026 (0 in all prior months) — amadeus_gds_tk only</div>
-        <div class="meta-item">🔧 <strong>Fix:</strong> Investigate LH fare rule or ETKT config change introduced May 2026</div>
-        <div class="meta-item">⚠️ <strong>Risk:</strong> Automation is +2pp overall — this new error will reverse the gain if it grows</div>
-        <div class="meta-item">👤 <strong>Owner:</strong> Eng / LH Integration</div>
-      </div>
-    </div>
-    <div class="urgent-card">
-      <div class="rank">#3 — LO / Book/Rebook Step</div>
-      <div class="title">Dedicated Sprint: amadeus_ndc Generic Failures</div>
-      <div class="error-pill">Failed modification (generic amadeus_ndc — no specific TDA code)</div>
-      <div class="meta" style="margin-top:8px">
-        <div class="meta-item">📊 <strong>23/month</strong> — 92% of all Book/Rebook errors</div>
-        <div class="meta-item">📉 <strong>Automation crashed:</strong> 69% Jan 2026 → 29% May 2026 (−40pp in 5 months)</div>
-        <div class="meta-item">🔧 <strong>Fix:</strong> Investigate NDC API version / config change post-Nov 2025 migration</div>
-        <div class="meta-item">👤 <strong>Owner:</strong> Eng / LO Integration</div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- ===== PRIORITY ACTIONS ===== -->
 <div class="section" id="actions">
-  <table class="priority-table">
+  <table class="priority-table" id="priorityTable">
     <thead>
       <tr>
         <th>#</th>
@@ -319,35 +287,34 @@
         <th>Automation Q2-25→Q2-26</th>
         <th>Fix Status</th>
         <th>Action Required</th>
-        <th>Owner</th>
         <th>Jira / OPS</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="row-urgent"><td>1</td><td><span class="badge urgent">🚨 URGENT</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Pnr updated by parallel process + FINISH OR IGNORE + SIMULTANEOUS CHANGES TO PNR</span></td><td>11 NEW (0 before)</td><td>68% → 61% (−7pp)</td><td><span class="status urgent-s">❌ No fix</span></td><td>Add PNR concurrency lock / retry-with-backoff. WN NDC migration side-effect.</td><td>Eng / WN</td><td>None — open now</td></tr>
-      <tr class="row-urgent"><td>2</td><td><span class="badge urgent">🚨 URGENT</span></td><td><strong>LH</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">LH ETKT: REVALIDATION REQUEST DENIED</span></td><td>10 NEW (0 before)</td><td>68% → 70% (⚠️ new error threatens reversal)</td><td><span class="status urgent-s">❌ No fix</span></td><td>Investigate LH revalidation flow on amadeus_gds_tk. Likely fare rule change May 2026.</td><td>Eng / LH</td><td>None — open now</td></tr>
-      <tr class="row-urgent"><td>3</td><td><span class="badge urgent">🚨 URGENT</span></td><td><strong>LO</strong></td><td>amadeus_ndc</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Failed modification (generic amadeus_ndc)</span></td><td>23/month — 92% of errors</td><td>53% → 29% (−24pp)</td><td><span class="status urgent-s">❌ Freefall</span></td><td>Investigate amadeus_ndc integration. Automation crashed 69%→29% in 5 months.</td><td>Eng / LO</td><td>None — open now</td></tr>
-      <tr class="row-high"><td>4</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>UA</strong></td><td>travelfusion</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Unknown supplier error (generic TF)</span></td><td>120/month — 56% of errors</td><td>46% → 66% (+20pp stalled)</td><td><span class="status urgent-s">❌ No Jira</span></td><td>Investigate TF generic failure root cause. Persistent all year (88–193/month).</td><td>Eng / UA + TF</td><td>None — open Jira</td></tr>
-      <tr class="row-high"><td>5</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>SK</strong></td><td>amadeus_ndc</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Failed modification (generic amadeus_ndc spike)</span></td><td>28/month (spiked to 67 Apr 2026)</td><td>68% → 60.5% (−7.5pp)</td><td><span class="status urgent-s">❌ No fix</span></td><td>Investigate amadeus_ndc API version/config. NDC migration Nov 2025.</td><td>Eng / SK</td><td>None — open Jira</td></tr>
-      <tr class="row-high"><td>6</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>LH</strong></td><td>travelfusion</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Unknown supplier error (generic TF)</span></td><td>86/month — 72% of errors</td><td>68% → 70% (+2pp stalled)</td><td><span class="status urgent-s">❌ No Jira</span></td><td>Investigate TF generic failures for LH. Main barrier to reaching 75% target.</td><td>Eng / LH + TF</td><td>None — open Jira</td></tr>
-      <tr class="row-high"><td>7</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>LH + UA</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">More than 1 ticket found for same passenger (mod-of-mod)</span></td><td>LH: 2 + UA: 2 = 4 NEW</td><td>—</td><td><span class="status wip">⚠️ Blocks only</span></td><td>Extend mod-of-mod support to ticketing. APP-106493 covers eligibility only.</td><td>Eng / Mods Squad</td><td>APP-106493 (extend)</td></tr>
-      <tr class="row-high"><td>8</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Ticketing failed (generic persistent baseline)</span></td><td>59/month — all year</td><td>68% → 61% (−7pp)</td><td><span class="status urgent-s">❌ No Jira</span></td><td>Investigate root cause. Separate from PNR conflicts (different error).</td><td>Eng / WN</td><td>None — open Jira</td></tr>
-      <tr class="row-high"><td>9</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>UA</strong></td><td>travelfusion</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">993 contacts — errors spread, no dominant error (&lt;5%)</span></td><td>993 contacts/month</td><td>46% → 66%</td><td><span class="status inprog">Partial</span></td><td>NOT_ALL_SEGMENTS_CONFIRMED fix in pipeline. APP-110207 released. Data audit recommended.</td><td>Eng / UA</td><td>APP-110207 Done</td></tr>
-      <tr class="row-high"><td>10</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">866 - NO FARE FOUND + 996 - NO JOURNEY FOUND</span></td><td>~43/month</td><td>68% → 61% (−7pp)</td><td><span class="status wip">WIP</span></td><td>Known in squad. Errors escalated to Amadeus. Monitor response.</td><td>Eng / WN</td><td>Escalated to Amadeus</td></tr>
-      <tr class="row-high"><td>11</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">WARNING: UNABLE TO DISPLAY E-TICKET / TICKET NUMBER NOT FOUND</span></td><td>~35/month</td><td>68% → 61% (−7pp)</td><td><span class="status wip">WIP</span></td><td>Known in squad. No dedicated Jira. Escalated to Amadeus.</td><td>Eng / WN</td><td>Escalated to Amadeus</td></tr>
-      <tr class="row-high"><td>12</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>SK</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">INVALID COUPON STATUS FOR TICKET UPDATE</span></td><td>~8/month</td><td>68% → 60.5%</td><td><span class="status wip">WIP</span></td><td>May be linked to APP-110779 (coupon status for involuntary flow). Investigate.</td><td>Eng / SK</td><td>APP-110779 (check)</td></tr>
-      <tr class="row-monitor"><td>13</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>LH</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">TRIP_IN_PROGRESS (mod-of-mod blocker)</span></td><td>44/month — NEW spike</td><td>68% → 70%</td><td><span class="status inprog">Partial</span></td><td>44 bookings/month blocked. APP-106493 covers some cases. Linked to mod-of-mod.</td><td>Product / Eng</td><td>APP-106493</td></tr>
-      <tr class="row-monitor"><td>14</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>UA</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">PROVIDER_ERROR — Item not found in TDA</span></td><td>32/month</td><td>46% → 66%</td><td><span class="status urgent-s">❌ No fix</span></td><td>Investigate via TDA_FLIGHT_MODIFICATION_ELIGIBILITY table for specific codes.</td><td>Eng / UA</td><td>None</td></tr>
-      <tr class="row-monitor"><td>15</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">PROVIDER_ERROR — Item not found in TDA</span></td><td>41/month</td><td>68% → 61%</td><td><span class="status urgent-s">❌ No fix</span></td><td>Same pattern as UA. Investigate TDA_FLIGHT_MODIFICATION_ELIGIBILITY.</td><td>Eng / WN</td><td>None</td></tr>
-      <tr class="row-monitor"><td>16</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>EW</strong></td><td>travelfusion</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">866 - NO FARE FOUND (post-fix baseline)</span></td><td>8/month (was 286 Jan 2026!)</td><td>~0% → 57% (+57pp)</td><td><span class="status fixed">✅ Post-fix</span></td><td>Monitor. Investigate gap to 86% Q2-25 baseline. OPS-9367 still open.</td><td>Eng / EW</td><td>OPS-9367</td></tr>
-      <tr class="row-monitor"><td>17</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>LH</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">WARNING: PRICING IMPOSSIBLE + FOP PROCESS UNSUCCESSFUL</span></td><td>~7/month</td><td>68% → 70%</td><td><span class="status wip">WIP</span></td><td>Low volume, all errors tied 14.3%. FOP = payment routing issue.</td><td>Eng / LH</td><td>None</td></tr>
-      <tr class="row-monitor"><td>18</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>UA</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Unknown routing id + HTTP 409 + Inactive conversation</span></td><td>~7/month</td><td>46% → 66%</td><td><span class="status inprog">Partial</span></td><td>Routing id fix DONE Mar 2026. Monitor for residual. HTTP 409 = parallel process conflict.</td><td>Eng / UA</td><td>Fix done Mar 2026</td></tr>
-      <tr class="row-monitor"><td>19</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>AA</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">WARNING: UNABLE TO DISPLAY E-TICKET + WARNING: PRICING IMPOSSIBLE</span></td><td>~23/month</td><td>55% → 82%</td><td><span class="status wip">WIP</span></td><td>Low priority at 82% automation. May be APP-106493 residual. Create Jira to track.</td><td>Eng / AA</td><td>None</td></tr>
-      <tr class="row-monitor"><td>20</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>EK</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Modified fare family Economy Flex ≠ original fare family Economy Saver</span></td><td>~8/month</td><td>43% → 65%</td><td><span class="status inprog">Released</span></td><td>Monitor if APP-113384 fix held. Low volume.</td><td>Eng / EK</td><td>APP-113384 Released</td></tr>
-      <tr class="row-monitor"><td>21</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>LH</strong></td><td>travelfusion</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">Booking Change - A general error (bookings modified outside NDC channel)</span></td><td>~27% of eligibility errors</td><td>68% → 70%</td><td><span class="status monitor">Won't Fix</span></td><td>Provider limitation — TF loses link to NDC booking. Cannot be fixed.</td><td>—</td><td>APP-110762 Won't Fix</td></tr>
-      <tr class="row-win"><td>22</td><td><span class="badge win">✅ WIN</span></td><td><strong>EW</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">error code 2-107-2707 — Results no longer available</span></td><td>0 (was 13 Nov 2025)</td><td>~0% → 57% (+57pp 🎉)</td><td><span class="status fixed">✅ FIXED</span></td><td>Communicate win. Zero timeout errors since Mar 2026. OPS-9367 closed.</td><td>Eng / EW</td><td>OPS-9367 Closed</td></tr>
-      <tr class="row-win"><td>23</td><td><span class="badge win">✅ WIN</span></td><td><strong>AA</strong></td><td>travelfusion / amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">866 - NO FARE FOUND — sold-out errors halving</span></td><td>50/month (was 91 Jan 2026)</td><td>55% → 82% (+27pp 🎉)</td><td><span class="status fixed">✅ Improving</span></td><td>Communicate win. AA is best-performing airline at 82% Q2-26.</td><td>Product / Eng</td><td>—</td></tr>
-      <tr class="row-win"><td>24</td><td><span class="badge win">✅ WIN</span></td><td><strong>EW</strong></td><td>travelfusion</td><td>All steps</td><td><span class="error-code">EW overall recovery post TF fix</span></td><td>—</td><td>~0% → 57% (+57pp 🎉)</td><td><span class="status fixed">✅ FIXED</span></td><td>Automation recovered from near-zero to 57%. Eligibility also healthy (no PROVIDER_ERROR May 2026).</td><td>Eng / EW</td><td>APP-109349 Done</td></tr>
+      <tr class="row-urgent"><td>1</td><td><span class="badge urgent">🚨 URGENT</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Pnr updated by parallel process + FINISH OR IGNORE + SIMULTANEOUS CHANGES TO PNR</span></td><td>11 NEW (0 before)</td><td>68% → 61% (−7pp)</td><td><span class="status urgent-s">❌ No fix</span></td><td>Add PNR concurrency lock / retry-with-backoff.</td><td>None — open now</td></tr>
+      <tr class="row-urgent"><td>2</td><td><span class="badge urgent">🚨 URGENT</span></td><td><strong>LH</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">LH ETKT: REVALIDATION REQUEST DENIED</span></td><td>10 NEW (0 before)</td><td>68% → 70% (⚠️ new error threatens reversal)</td><td><span class="status urgent-s">❌ No fix</span></td><td>Investigate LH revalidation flow on amadeus_gds_tk. Likely fare rule change May 2026.</td><td>None — open now</td></tr>
+      <tr class="row-urgent"><td>3</td><td><span class="badge urgent">🚨 URGENT</span></td><td><strong>LO</strong></td><td>amadeus_ndc</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Failed modification (generic amadeus_ndc)</span></td><td>23/month — 92% of errors</td><td>53% → 29% (−24pp)</td><td><span class="status urgent-s">❌ Freefall</span></td><td>Investigate amadeus_ndc integration. Automation crashed 69%→29% in 5 months.</td><td>None — open now</td></tr>
+      <tr class="row-high"><td>4</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>UA</strong></td><td>travelfusion</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Unknown supplier error (generic TF)</span></td><td>120/month — 56% of errors</td><td>46% → 66% (+20pp stalled)</td><td><span class="status urgent-s">❌ No Jira</span></td><td>Investigate TF generic failure root cause. Persistent all year (88–193/month).</td><td>None — open Jira</td></tr>
+      <tr class="row-high"><td>5</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>SK</strong></td><td>amadeus_ndc</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Failed modification (generic amadeus_ndc spike)</span></td><td>28/month (spiked to 67 Apr 2026)</td><td>68% → 60.5% (−7.5pp)</td><td><span class="status urgent-s">❌ No fix</span></td><td>Investigate amadeus_ndc API version/config. NDC migration Nov 2025.</td><td>None — open Jira</td></tr>
+      <tr class="row-high"><td>6</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>LH</strong></td><td>travelfusion</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Unknown supplier error (generic TF)</span></td><td>86/month — 72% of errors</td><td>68% → 70% (+2pp stalled)</td><td><span class="status urgent-s">❌ No Jira</span></td><td>Investigate TF generic failures for LH. Main barrier to reaching 75% target.</td><td>None — open Jira</td></tr>
+      <tr class="row-high"><td>7</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>LH + UA</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">More than 1 ticket found for same passenger (mod-of-mod)</span></td><td>LH: 2 + UA: 2 = 4 NEW</td><td>—</td><td><span class="status wip">⚠️ Blocks only</span></td><td>Extend mod-of-mod support to ticketing. APP-106493 covers eligibility only.</td><td>APP-106493 (extend)</td></tr>
+      <tr class="row-high"><td>8</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Ticketing failed (generic persistent baseline)</span></td><td>59/month — all year</td><td>68% → 61% (−7pp)</td><td><span class="status urgent-s">❌ No Jira</span></td><td>Investigate root cause. Separate from PNR conflicts (different error).</td><td>None — open Jira</td></tr>
+      <tr class="row-high"><td>9</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>UA</strong></td><td>travelfusion</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">993 contacts — errors spread, no dominant error (&lt;5%)</span></td><td>993 contacts/month</td><td>46% → 66%</td><td><span class="status inprog">Partial</span></td><td>NOT_ALL_SEGMENTS_CONFIRMED fix in pipeline. APP-110207 released. Data audit recommended.</td><td>APP-110207 Done</td></tr>
+      <tr class="row-high"><td>10</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">866 - NO FARE FOUND + 996 - NO JOURNEY FOUND</span></td><td>~43/month</td><td>68% → 61% (−7pp)</td><td><span class="status wip">WIP</span></td><td>Known in squad. Errors escalated to Amadeus. Monitor response.</td><td>Escalated to Amadeus</td></tr>
+      <tr class="row-high"><td>11</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">WARNING: UNABLE TO DISPLAY E-TICKET / TICKET NUMBER NOT FOUND</span></td><td>~35/month</td><td>68% → 61% (−7pp)</td><td><span class="status wip">WIP</span></td><td>Known in squad. No dedicated Jira. Escalated to Amadeus.</td><td>Escalated to Amadeus</td></tr>
+      <tr class="row-high"><td>12</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>SK</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">INVALID COUPON STATUS FOR TICKET UPDATE</span></td><td>~8/month</td><td>68% → 60.5%</td><td><span class="status wip">WIP</span></td><td>May be linked to APP-110779 (coupon status for involuntary flow). Investigate.</td><td>APP-110779 (check)</td></tr>
+      <tr class="row-monitor"><td>13</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>LH</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">TRIP_IN_PROGRESS (mod-of-mod blocker)</span></td><td>44/month — NEW spike</td><td>68% → 70%</td><td><span class="status inprog">Partial</span></td><td>44 bookings/month blocked. APP-106493 covers some cases. Linked to mod-of-mod.</td><td>APP-106493</td></tr>
+      <tr class="row-monitor"><td>14</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>UA</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">PROVIDER_ERROR — Item not found in TDA</span></td><td>32/month</td><td>46% → 66%</td><td><span class="status urgent-s">❌ No fix</span></td><td>Investigate via TDA_FLIGHT_MODIFICATION_ELIGIBILITY table for specific codes.</td><td>None</td></tr>
+      <tr class="row-monitor"><td>15</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>WN</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">PROVIDER_ERROR — Item not found in TDA</span></td><td>41/month</td><td>68% → 61%</td><td><span class="status urgent-s">❌ No fix</span></td><td>Same pattern as UA. Investigate TDA_FLIGHT_MODIFICATION_ELIGIBILITY.</td><td>None</td></tr>
+      <tr class="row-monitor"><td>16</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>EW</strong></td><td>travelfusion</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">866 - NO FARE FOUND (post-fix baseline)</span></td><td>8/month (was 286 Jan 2026!)</td><td>~0% → 57% (+57pp)</td><td><span class="status fixed">✅ Post-fix</span></td><td>Monitor. Investigate gap to 86% Q2-25 baseline. OPS-9367 still open.</td><td>OPS-9367</td></tr>
+      <tr class="row-monitor"><td>17</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>LH</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">WARNING: PRICING IMPOSSIBLE + FOP PROCESS UNSUCCESSFUL</span></td><td>~7/month</td><td>68% → 70%</td><td><span class="status wip">WIP</span></td><td>Low volume, all errors tied 14.3%. FOP = payment routing issue.</td><td>None</td></tr>
+      <tr class="row-monitor"><td>18</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>UA</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Unknown routing id + HTTP 409 + Inactive conversation</span></td><td>~7/month</td><td>46% → 66%</td><td><span class="status inprog">Partial</span></td><td>Routing id fix DONE Mar 2026. Monitor for residual. HTTP 409 = parallel process conflict.</td><td>Fix done Mar 2026</td></tr>
+      <tr class="row-monitor"><td>19</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>AA</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">WARNING: UNABLE TO DISPLAY E-TICKET + WARNING: PRICING IMPOSSIBLE</span></td><td>~23/month</td><td>55% → 82%</td><td><span class="status wip">WIP</span></td><td>Low priority at 82% automation. May be APP-106493 residual. Create Jira to track.</td><td>None</td></tr>
+      <tr class="row-monitor"><td>20</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>EK</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Modified fare family Economy Flex ≠ original fare family Economy Saver</span></td><td>~8/month</td><td>43% → 65%</td><td><span class="status inprog">Released</span></td><td>Monitor if APP-113384 fix held. Low volume.</td><td>APP-113384 Released</td></tr>
+      <tr class="row-monitor"><td>21</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>LH</strong></td><td>travelfusion</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">Booking Change - A general error (bookings modified outside NDC channel)</span></td><td>~27% of eligibility errors</td><td>68% → 70%</td><td><span class="status monitor">Won't Fix</span></td><td>Provider limitation — TF loses link to NDC booking. Cannot be fixed.</td><td>APP-110762 Won't Fix</td></tr>
+      <tr class="row-win"><td>22</td><td><span class="badge win">✅ WIN</span></td><td><strong>EW</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">error code 2-107-2707 — Results no longer available</span></td><td>0 (was 13 Nov 2025)</td><td>~0% → 57% (+57pp 🎉)</td><td><span class="status fixed">✅ FIXED</span></td><td>Communicate win. Zero timeout errors since Mar 2026. OPS-9367 closed.</td><td>OPS-9367 Closed</td></tr>
+      <tr class="row-win"><td>23</td><td><span class="badge win">✅ WIN</span></td><td><strong>AA</strong></td><td>travelfusion / amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">866 - NO FARE FOUND — sold-out errors halving</span></td><td>50/month (was 91 Jan 2026)</td><td>55% → 82% (+27pp 🎉)</td><td><span class="status fixed">✅ Improving</span></td><td>Communicate win. AA is best-performing airline at 82% Q2-26.</td><td>—</td></tr>
+      <tr class="row-win"><td>24</td><td><span class="badge win">✅ WIN</span></td><td><strong>EW</strong></td><td>travelfusion</td><td>All steps</td><td><span class="error-code">EW overall recovery post TF fix</span></td><td>—</td><td>~0% → 57% (+57pp 🎉)</td><td><span class="status fixed">✅ FIXED</span></td><td>Automation recovered from near-zero to 57%. Eligibility also healthy (no PROVIDER_ERROR May 2026).</td><td>APP-109349 Done</td></tr>
     </tbody>
   </table>
 </div>
@@ -425,6 +392,59 @@
       row.style.display = row.classList.contains(type) ? '' : 'none';
     });
   }
+
+  // ── EDIT MODE ──
+  let editMode = false;
+  const STORAGE_KEY = 'flightModDashboard_v1';
+
+  function getEditableCells() {
+    return document.querySelectorAll('#priorityTable td, #detailTable td');
+  }
+
+  function toggleEditMode() {
+    editMode = !editMode;
+    const btn = document.getElementById('editToggle');
+    const banner = document.getElementById('editBanner');
+    btn.textContent = editMode ? '💾 Done Editing' : '✏️ Edit Mode';
+    btn.classList.toggle('editing', editMode);
+    banner.classList.toggle('visible', editMode);
+    getEditableCells().forEach((td, i) => {
+      if (editMode) {
+        td.setAttribute('contenteditable', 'true');
+        td.dataset.idx = i;
+      } else {
+        td.removeAttribute('contenteditable');
+        saveEdits();
+      }
+    });
+  }
+
+  function saveEdits() {
+    const data = {};
+    getEditableCells().forEach((td, i) => { data[i] = td.innerHTML; });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+  }
+
+  function loadEdits() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+      const data = JSON.parse(saved);
+      getEditableCells().forEach((td, i) => {
+        if (data[i] !== undefined) td.innerHTML = data[i];
+      });
+    } catch(e) {}
+  }
+
+  // Auto-save on each keystroke while in edit mode
+  document.addEventListener('input', function(e) {
+    if (editMode && (e.target.closest('#priorityTable') || e.target.closest('#detailTable'))) {
+      saveEdits();
+    }
+  });
+
+  // Load saved edits on page open
+  window.addEventListener('DOMContentLoaded', loadEdits);
 </script>
 </body>
 </html>
