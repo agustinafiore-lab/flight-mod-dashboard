@@ -45,6 +45,7 @@
 
   /* SECTION TITLE */
   .section-title { font-size: 16px; font-weight: 700; color: #1F3864; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; display: flex; align-items: center; gap: 8px; }
+  .group-row td { background: #E8EDF7 !important; font-size: 10px; font-weight: 800; color: #1F3864; text-transform: uppercase; letter-spacing: 1px; padding: 5px 16px !important; border-bottom: none !important; }
 
   /* AUTOMATION TABLE */
   .auto-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 32px; }
@@ -150,23 +151,23 @@
       <div class="sub">WN · LH · LO</div>
     </div>
     <div class="scorecard high">
-      <div class="number">9</div>
+      <div class="number">10</div>
       <div class="label">⚠️ High</div>
-      <div class="sub">UA · SK · LH · WN<br>Next sprint</div>
+      <div class="sub">UA(TF) · SK · LH · WN · DL<br>Next sprint</div>
     </div>
     <div class="scorecard monitor">
-      <div class="number">9</div>
+      <div class="number">11</div>
       <div class="label">👀 Monitor</div>
       <div class="sub">Track monthly<br>No immediate action</div>
     </div>
     <div class="scorecard win">
-      <div class="number">3</div>
+      <div class="number">4</div>
       <div class="label">✅ Wins</div>
-      <div class="sub">EW · AA</div>
+      <div class="sub">EW · AA(TF) · DL improving</div>
     </div>
   </div>
 
-  <div class="section-title">📈 Automation Rate by Airline — Q2 2025 vs Q2 2026</div>
+  <div class="section-title">📈 Automation Rate by Airline — Q2 2025 vs Q2 2026 &nbsp;<span style="font-size:11px;font-weight:400;color:#888">US airlines split by provider · Source: FLIGHT_MOD table · Q2 2026 partial through Jun 3</span></div>
   <table class="auto-table">
     <thead>
       <tr>
@@ -181,16 +182,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><strong>WN — Southwest</strong></td>
-        <td>amadeus_gds_tk</td>
-        <td>68%</td>
-        <td>61%</td>
-        <td><span class="change neg-big">−7pp</span></td>
-        <td class="trend">📉</td>
-        <td><span class="badge urgent">🚨 URGENT</span></td>
-        <td>PNR concurrency conflicts NEW May 2026 + persistent ticketing failures (59/month)</td>
-      </tr>
+      <tr class="group-row"><td colspan="8">🌍 European &amp; Middle East Airlines</td></tr>
       <tr>
         <td><strong>SK — SAS</strong></td>
         <td>amadeus_ndc / amadeus_gds_tk</td>
@@ -232,16 +224,6 @@
         <td>NEW May 2026: LH ETKT REVALIDATION REQUEST DENIED (10 PNRs, 0 before). TF generic = 86/month.</td>
       </tr>
       <tr>
-        <td><strong>UA — United</strong></td>
-        <td>travelfusion / amadeus_gds_tk</td>
-        <td>46%</td>
-        <td>66%</td>
-        <td><span class="change pos-big">+20pp</span></td>
-        <td class="trend">📈</td>
-        <td><span class="badge high">⚠️ HIGH</span></td>
-        <td>TF Unknown supplier error = 120/month. No Jira. mod-of-mod new May 2026.</td>
-      </tr>
-      <tr>
         <td><strong>EW — Eurowings</strong></td>
         <td>travelfusion</td>
         <td>86%</td>
@@ -251,22 +233,73 @@
         <td><span class="badge monitor">👀 MONITOR</span></td>
         <td>TF timeout FIXED Mar 2026 (0 errors since). Gap to Q2-25 baseline (−29pp) remains.</td>
       </tr>
+      <tr class="group-row"><td colspan="8">🇺🇸 US Airlines — Provider-Level Breakdown (Source: FLIGHT_MOD table)</td></tr>
+      <tr>
+        <td><strong>WN — Southwest</strong></td>
+        <td>amadeus_gds_tk</td>
+        <td>63.2%</td>
+        <td>67.4%</td>
+        <td><span class="change pos-small">+4pp</span></td>
+        <td class="trend">📈</td>
+        <td><span class="badge urgent">🚨 URGENT</span></td>
+        <td>Improving overall but ticketing failures still dominant (145/Q2-26 vs 236/Q2-25). PNR concurrency conflicts NEW May 2026. Price increase errors growing (7→26).</td>
+      </tr>
+      <tr>
+        <td><strong>UA — United</strong></td>
+        <td>amadeus_gds_tk</td>
+        <td>73.6%</td>
+        <td>79.5%</td>
+        <td><span class="change pos-small">+6pp</span></td>
+        <td class="trend">📈</td>
+        <td><span class="badge monitor">👀 MONITOR</span></td>
+        <td>Solid performer on Amadeus. Sold-out failures = 88/Q2-26. New "Bad Request" ticketing error appeared (11/Q2-26).</td>
+      </tr>
+      <tr>
+        <td><strong>UA — United</strong></td>
+        <td>travelfusion</td>
+        <td>30.2%</td>
+        <td>51.0%</td>
+        <td><span class="change pos-big">+21pp</span></td>
+        <td class="trend">📈</td>
+        <td><span class="badge high">⚠️ HIGH</span></td>
+        <td>Improving significantly but still very low. TF Unknown supplier error = 172/Q2-26 (#1 error). Main drag on UA overall automation.</td>
+      </tr>
       <tr>
         <td><strong>AA — American</strong></td>
-        <td>travelfusion / amadeus_gds_tk</td>
-        <td>55%</td>
-        <td>82%</td>
-        <td><span class="change pos-big">+27pp</span></td>
+        <td>travelfusion</td>
+        <td>76.3%</td>
+        <td>90.8%</td>
+        <td><span class="change pos-big">+15pp</span></td>
         <td class="trend">📈</td>
         <td><span class="badge win">✅ WIN</span></td>
-        <td>866 sold-out −45%. Best automation in portfolio (82%). Communicate win.</td>
+        <td>Best TF automation in portfolio. Volume tripled vs Q2 2025 (266→793 bookings). Communicate win.</td>
+      </tr>
+      <tr>
+        <td><strong>AA — American</strong></td>
+        <td>amadeus_gds_tk</td>
+        <td>68.5%</td>
+        <td>65.4%</td>
+        <td><span class="change neg-small">−3pp</span></td>
+        <td class="trend">📉</td>
+        <td><span class="badge monitor">👀 MONITOR</span></td>
+        <td>Slight decline. Sold-out failures = 91/Q2-26 (#1 error). Ticketing failures = 49/Q2-26. Investigate root cause.</td>
+      </tr>
+      <tr>
+        <td><strong>DL — Delta</strong></td>
+        <td>amadeus_gds_tk</td>
+        <td>65.1%</td>
+        <td>75.5%</td>
+        <td><span class="change pos-big">+10pp</span></td>
+        <td class="trend">📈</td>
+        <td><span class="badge monitor">👀 MONITOR</span></td>
+        <td>Strong improvement. Legacy amadeus_gds fully retired Q1 2026. ⚠️ Generic mod failures nearly doubled in partial Q2 2026 (182 vs 84 full Q2 2025) — new root cause unidentified.</td>
       </tr>
       <tr class="avg-row">
-        <td colspan="2"><strong>Portfolio Average</strong></td>
-        <td><strong>62%</strong></td>
-        <td><strong>61%</strong></td>
-        <td><span class="change neg-small">−1pp</span></td>
-        <td></td><td></td><td></td>
+        <td colspan="2"><strong>US Airlines Average (combined)</strong></td>
+        <td><strong>60.6%</strong></td>
+        <td><strong>73.0%</strong></td>
+        <td><span class="change pos-big">+12pp</span></td>
+        <td></td><td></td><td><span style="font-size:10px;color:#888">FLIGHT_MOD · WN+UA+AA+DL combined</span></td>
       </tr>
     </tbody>
   </table>
@@ -316,6 +349,9 @@
       <tr class="row-win"><td>22</td><td><span class="badge win">✅ WIN</span></td><td><strong>EW</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">error code 2-107-2707 — Results no longer available</span></td><td>0 (was 13 Nov 2025)</td><td>~0% → 57% (+57pp 🎉)</td><td><span class="status fixed">✅ FIXED</span></td><td>Communicate win. Zero timeout errors since Mar 2026. OPS-9367 closed.</td><td>OPS-9367 Closed</td></tr>
       <tr class="row-win"><td>23</td><td><span class="badge win">✅ WIN</span></td><td><strong>AA</strong></td><td>travelfusion / amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">866 - NO FARE FOUND — sold-out errors halving</span></td><td>50/month (was 91 Jan 2026)</td><td>55% → 82% (+27pp 🎉)</td><td><span class="status fixed">✅ Improving</span></td><td>Communicate win. AA is best-performing airline at 82% Q2-26.</td><td>—</td></tr>
       <tr class="row-win"><td>24</td><td><span class="badge win">✅ WIN</span></td><td><strong>EW</strong></td><td>travelfusion</td><td>All steps</td><td><span class="error-code">EW overall recovery post TF fix</span></td><td>—</td><td>~0% → 57% (+57pp 🎉)</td><td><span class="status fixed">✅ FIXED</span></td><td>Automation recovered from near-zero to 57%. Eligibility also healthy (no PROVIDER_ERROR May 2026).</td><td>APP-109349 Done</td></tr>
+      <tr class="row-high"><td>25</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>DL</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Failed modification (generic — doubled in Q2 2026)</span></td><td>182/Q2-26 partial (was 84 full Q2-25)</td><td>65.1% → 75.5% (+10pp)</td><td><span class="status urgent-s">❌ No Jira</span></td><td>Generic modification failures nearly doubled despite overall rate improvement. New root cause unknown — open Jira to investigate.</td><td>None — open Jira</td></tr>
+      <tr class="row-high"><td>26</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>DL</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Ticketing failed (generic) + Check element number + MULTIPLE EXCHANGE/ISSUANCE NOT AUTHORIZED</span></td><td>92 generic + ~14 PNR-specific/Q2-26</td><td>65.1% → 75.5% (ticketing improving: 305→92)</td><td><span class="status wip">Improving</span></td><td>Ticketing failures halved vs Q2 2025 — positive trend. Investigate "Check element number" (DL-specific GDS formatting issue) and MULTIPLE EXCHANGE/ISSUANCE NOT AUTHORIZED.</td><td>None</td></tr>
+      <tr class="row-monitor"><td>27</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>DL</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">Failed modification – sold out property</span></td><td>44/Q2-26 (was 90/Q2-25)</td><td>65.1% → 75.5%</td><td><span class="status fixed">✅ Improving</span></td><td>Sold-out failures halved. Legacy amadeus_gds fully retired — migration complete.</td><td>—</td></tr>
     </tbody>
   </table>
 </div>
@@ -370,6 +406,9 @@
       <tr class="elig"><td><strong>AA</strong></td><td>travelfusion</td><td><span class="step-pill eligibility">Eligibility</span></td><td>DOCUMENT NUMBER NOT ELIGIBLE FOR AMADEUS TICKET CHANGER</td><td>11.5%</td><td>Booking Change - A general error has occurred</td><td>8.3%</td><td>Booking Change - Invalid original booking status</td><td>6.9%</td><td>PROVIDER_ERROR generic = 37/month · Item not found in TDA = 35/month · TRIP_IN_PROGRESS = 28</td><td><span class="status inprog">In progress</span></td><td>APP-106493 Released. OPS-11445 pending.</td></tr>
       <tr class="book"><td><strong>AA</strong></td><td>travelfusion / amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td>866 - NO FARE FOUND FOR REQUESTED ITINERARY</td><td>28.6%</td><td>Search failed</td><td>14.3%</td><td>1002 - Invalid original itinerary</td><td>9.5%</td><td class="update-ok">✅ 866 = 50/month (was 91 Jan 2026 = −45%) · Generic = 53/month (was 290 = −82%)</td><td><span class="status fixed">✅ Improving</span></td><td>OPS-11445 pending (AA AAdvantage corp code in reshop)</td></tr>
       <tr class="tick"><td><strong>AA</strong></td><td>travelfusion / amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td>WARNING: UNABLE TO DISPLAY E-TICKET / TICKET NUMBER NOT FOUND</td><td>21.4%</td><td>WARNING: PRICING IMPOSSIBLE: NO FARE FOR BOOKING CODE</td><td>14.3%</td><td>WARNING: SEGMENT SELL FAILURE</td><td>14.3%</td><td>Ticketing failed = 22/month (was 81 Apr 2025 = −73%) · Check element number = 4 NEW</td><td><span class="status wip">WIP</span></td><td>APP-106493 residual. Create Jira.</td></tr>
+      <tr class="elig"><td><strong>DL</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill eligibility">Eligibility</span></td><td colspan="6">No eligibility errors found in FLIGHT_MOD table — eligibility step performing well</td><td class="update-ok">✅ No eligibility failures in Q2 2026 data</td><td><span class="status fixed">✅ Clean</span></td><td>—</td></tr>
+      <tr class="book"><td><strong>DL</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td>Failed modification (generic)</td><td>—</td><td>Failed modification – sold out</td><td>—</td><td>Failed modification – price increase</td><td>—</td><td class="update-new">🚨 Generic failures = 182/Q2-26 partial (was 84 full Q2-25 — nearly doubled). Sold-out = 44 (improved from 90). Price increase = 19.</td><td><span class="status urgent-s">❌ No Jira</span></td><td>Open Jira — root cause unknown</td></tr>
+      <tr class="tick"><td><strong>DL</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td>Ticketing failed (generic)</td><td>—</td><td>Check element number</td><td>—</td><td>MULTIPLE EXCHANGE/ISSUANCE NOT AUTHORIZED - USE TST/TSM SELECT</td><td>—</td><td class="update-ok">✅ Ticketing improving: 305 total Q2-25 → 92 generic Q2-26. New: Check element number (~8 PNRs), TTM INHIBITED (2), INVALID RV - NO RESIDUAL VALUE.</td><td><span class="status wip">Improving</span></td><td>Monitor. Investigate new PNR-specific errors.</td></tr>
     </tbody>
   </table>
 </div>
