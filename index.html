@@ -128,7 +128,7 @@
 <div class="header">
   <div class="header-text">
     <h1>✈️ Flight Modification Automation — Executive Dashboard</h1>
-    <p>Q2 2025 vs Q2 2026 &nbsp;·&nbsp; 10 Airlines &nbsp;·&nbsp; Source: Looker V2_F_CUSTOMER_CARE_CONTACTS &nbsp;·&nbsp; ProdOps Review</p>
+    <p>Q2 2025 vs Q2 2026 &nbsp;·&nbsp; 14 Airlines &nbsp;·&nbsp; Source: Looker V2_F_CUSTOMER_CARE_CONTACTS &nbsp;·&nbsp; ProdOps Review</p>
   </div>
   <button id="editToggle" onclick="toggleEditMode()">✏️ Edit Mode</button>
 </div>
@@ -146,24 +146,24 @@
 
   <div class="scorecards">
     <div class="scorecard urgent">
-      <div class="number">7</div>
+      <div class="number">6</div>
       <div class="label">🚨 Urgent</div>
-      <div class="sub">WN · DL · EK · LO · LH(TF) · UA(TF) · SK</div>
+      <div class="sub">WN · DL · LO · LH(TF) · UA(TF) · SK</div>
     </div>
     <div class="scorecard high">
       <div class="number">9</div>
       <div class="label">⚠️ High</div>
-      <div class="sub">LH(amadeus) · AA · SK errors<br>Next sprint</div>
+      <div class="sub">LH(amadeus) · AA(amadeus+TF) · action items<br>Next sprint</div>
     </div>
     <div class="scorecard monitor">
-      <div class="number">9</div>
+      <div class="number">8</div>
       <div class="label">👀 Monitor</div>
-      <div class="sub">UA(amadeus) · EW<br>Track monthly</div>
+      <div class="sub">UA(amadeus) · EW · AF · EK(amadeus)<br>Track monthly</div>
     </div>
     <div class="scorecard win">
-      <div class="number">2</div>
+      <div class="number">6</div>
       <div class="label">✅ Wins</div>
-      <div class="sub">EW timeout fix · error fixes</div>
+      <div class="sub">BA · IB · KL · EK(TF) · EW fix · IB gains</div>
     </div>
   </div>
 
@@ -200,8 +200,18 @@
         <td>16%</td>
         <td><span class="change neg-big">−31pp</span></td>
         <td class="trend">📉</td>
-        <td><span class="badge urgent">🚨 URGENT</span></td>
-        <td>Catastrophic −31pp decline. Steady drop every quarter (Q3: 29%, Q4: 26%, Q1: 16%). Ticketing fix Apr 2026 insufficient — eligibility &amp; Book/Rebook failures are root cause.</td>
+        <td><span class="badge monitor">👀 MONITOR</span></td>
+        <td>Steep decline but volume is near zero (&lt;1% of mods). Low customer impact currently. Monitor — if volume grows, becomes critical.</td>
+      </tr>
+      <tr>
+        <td><strong>EK — Emirates</strong></td>
+        <td>travelfusion</td>
+        <td>33%</td>
+        <td>39%</td>
+        <td><span class="change pos-small">+6pp</span></td>
+        <td class="trend">📈</td>
+        <td><span class="badge win">✅ WIN</span></td>
+        <td>Improving on TF. Steady gains across quarters (Q3: 40%, Q4: 30%, Q1: 25%, Q2: 39%). Main EK volume channel. Continue monitoring.</td>
       </tr>
       <tr>
         <td><strong>LO — LOT Polish</strong></td>
@@ -242,6 +252,46 @@
         <td class="trend">📈</td>
         <td><span class="badge monitor">👀 MONITOR</span></td>
         <td>TF timeout fix Mar 2026 (0 errors since). Slight recovery +5pp. Baseline remains very low at 28%. Continue monitoring.</td>
+      </tr>
+      <tr>
+        <td><strong>BA — British Airways</strong></td>
+        <td>travelfusion</td>
+        <td>46%</td>
+        <td>55%</td>
+        <td><span class="change pos-big">+9pp</span></td>
+        <td class="trend">📈</td>
+        <td><span class="badge win">✅ WIN</span></td>
+        <td>Improving +9pp. Highest volume airline in dataset (6% share). Strong trend. Continue monitoring and protect gains.</td>
+      </tr>
+      <tr>
+        <td><strong>IB — Iberia</strong></td>
+        <td>travelfusion</td>
+        <td>30%</td>
+        <td>45%</td>
+        <td><span class="change pos-big">+15pp</span></td>
+        <td class="trend">📈</td>
+        <td><span class="badge win">✅ WIN</span></td>
+        <td>Strong improvement +15pp (4% volume). Notable gains from Q3 2025 onwards. Investigate what drove improvement — replicate for other TF airlines.</td>
+      </tr>
+      <tr>
+        <td><strong>KL — KLM</strong></td>
+        <td>travelfusion</td>
+        <td>25%</td>
+        <td>40%</td>
+        <td><span class="change pos-big">+15pp</span></td>
+        <td class="trend">📈</td>
+        <td><span class="badge win">✅ WIN</span></td>
+        <td>Strong improvement +15pp (3% volume). Baseline still low — room to grow. Monitor Q3 2026 to confirm trend holds.</td>
+      </tr>
+      <tr>
+        <td><strong>AF — Air France</strong></td>
+        <td>travelfusion</td>
+        <td>45%</td>
+        <td>50%</td>
+        <td><span class="change pos-small">+5pp</span></td>
+        <td class="trend">📈</td>
+        <td><span class="badge monitor">👀 MONITOR</span></td>
+        <td>Steady improvement +5pp (3% volume). Q4 2025 dip (40%) recovered. Stable trend.</td>
       </tr>
       <tr class="group-row"><td colspan="8">🇺🇸 US Airlines — Provider-Level Breakdown</td></tr>
       <tr>
@@ -354,7 +404,7 @@
       <tr class="row-monitor"><td>17</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>LH</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">WARNING: PRICING IMPOSSIBLE + FOP PROCESS UNSUCCESSFUL</span></td><td>~7/month</td><td>42% → 26% (TF −16pp)</td><td><span class="status wip">WIP</span></td><td>Low volume, all errors tied 14.3%. FOP = payment routing issue. Context: TF LH in URGENT decline.</td><td>None</td></tr>
       <tr class="row-monitor"><td>18</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>UA</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Unknown routing id + HTTP 409 + Inactive conversation</span></td><td>~7/month</td><td>36% → 25% (TF −11pp)</td><td><span class="status inprog">Partial</span></td><td>Routing id fix DONE Mar 2026. Monitor for residual. HTTP 409 = parallel process conflict.</td><td>Fix done Mar 2026</td></tr>
       <tr class="row-monitor"><td>19</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>AA</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">WARNING: UNABLE TO DISPLAY E-TICKET + WARNING: PRICING IMPOSSIBLE</span></td><td>~23/month</td><td>61% → 51% (TF −10pp)</td><td><span class="status wip">WIP</span></td><td>Ticketing errors contribute to overall TF AA decline. May be APP-106493 residual. Create Jira to track.</td><td>None</td></tr>
-      <tr class="row-urgent"><td>20</td><td><span class="badge urgent">🚨 URGENT</span></td><td><strong>EK</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Modified fare family Economy Flex ≠ original fare family Economy Saver + generic failures</span></td><td>~8/month ticketing + eligibility/book failures</td><td>47% → 16% (−31pp)</td><td><span class="status urgent-s">❌ Critical</span></td><td>EK in catastrophic decline (47%→16%). APP-113384 ticketing fix insufficient — eligibility and Book/Rebook failures driving the collapse. Full investigation needed.</td><td>APP-113384 (insufficient)</td></tr>
+      <tr class="row-monitor"><td>20</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>EK</strong></td><td>amadeus_gds_tk</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">Modified fare family Economy Flex ≠ original fare family Economy Saver</span></td><td>~8/month (volume &lt;1% Q2 2026)</td><td>amadeus: 47%→16% / TF: 33%→39%</td><td><span class="status inprog">APP-113384</span></td><td>EK amadeus volume near zero — low customer impact. TF channel improving (33%→39%). Monitor amadeus volume — if grows, escalate. APP-113384 fix holds for ticketing.</td><td>APP-113384 Released</td></tr>
       <tr class="row-monitor"><td>21</td><td><span class="badge monitor">👀 MONITOR</span></td><td><strong>LH</strong></td><td>travelfusion</td><td><span class="step-pill eligibility">Eligibility</span></td><td><span class="error-code">Booking Change - A general error (bookings modified outside NDC channel)</span></td><td>~27% of eligibility errors</td><td>42% → 26% (TF −16pp)</td><td><span class="status monitor">Won't Fix</span></td><td>Provider limitation — TF loses link to NDC booking. Cannot be fixed. Structural drag on TF LH rate.</td><td>APP-110762 Won't Fix</td></tr>
       <tr class="row-win"><td>22</td><td><span class="badge win">✅ WIN</span></td><td><strong>EW</strong></td><td>travelfusion</td><td><span class="step-pill ticket">Ticket</span></td><td><span class="error-code">error code 2-107-2707 — Results no longer available</span></td><td>0 (was 13 Nov 2025)</td><td>23% → 28% (+5pp)</td><td><span class="status fixed">✅ FIXED</span></td><td>Zero timeout errors since Mar 2026. OPS-9367 closed. Error volume eliminated — now work on overall rate improvement.</td><td>OPS-9367 Closed</td></tr>
       <tr class="row-high"><td>23</td><td><span class="badge high">⚠️ HIGH</span></td><td><strong>AA</strong></td><td>travelfusion / amadeus_gds_tk</td><td><span class="step-pill bookrebook">Book/Rebook</span></td><td><span class="error-code">866 - NO FARE FOUND — sold-out errors (volume growing)</span></td><td>50/month TF + 91/month amadeus</td><td>61% → 51% (TF) / 63% → 55% (amadeus)</td><td><span class="status wip">Declining</span></td><td>AA automation declining on both providers despite volume growth. 866 sold-out errors growing. Investigate capacity/fare availability issues.</td><td>OPS-11445 pending</td></tr>
